@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../home.dart' as home;
+import 'pages/genre_selection.dart';
+import 'pages/home.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ProviderScope(child: MyApp(),));
 
 class MyApp extends StatefulWidget {
   @override
@@ -10,7 +12,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  Widget current_window = home.HomeScreen();
+  Widget current_window = GenreSelectionPage();
 
   Widget build(BuildContext context) {
     return MaterialApp(
