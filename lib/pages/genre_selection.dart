@@ -5,6 +5,8 @@ import 'package:music_quiz/data/genre_provider.dart';
 
 
 class GenreSelectionPage extends StatefulWidget {
+  const GenreSelectionPage({super.key});
+
   @override
   State<GenreSelectionPage> createState() => _GenreSelectionPageState();
 }
@@ -13,7 +15,7 @@ class _GenreSelectionPageState extends State<GenreSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Center(
@@ -34,7 +36,7 @@ class GenreOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final genres = ref.watch(GenreNotifierProvider);
+    final genres = ref.watch(genreNotifierProvider);
     print(genres);
     return Center(
       child: Column(
@@ -58,7 +60,7 @@ class GenreOptions extends ConsumerWidget {
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 primary: true,
-                children: genres.map((e) => GenreButton(genreName: e,)).toList(),
+                children: genres.map((e) => GenreButton(genreName: e.name,)).toList(),
               ),
             ),
           ),
@@ -74,6 +76,7 @@ class GenreButton extends StatelessWidget {
     this.genreName = 'Rock'});
 
   String genreName = 'Rock';
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 150,
