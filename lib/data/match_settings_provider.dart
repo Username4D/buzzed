@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
 
 class MatchSettingsNotifier extends Notifier<Map<String, dynamic>> {
   @override

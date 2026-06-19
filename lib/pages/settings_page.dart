@@ -303,7 +303,7 @@ class _KeybindButtonState extends ConsumerState<KeybindButton> {
     this.settingName = '', this.character = ''
   });
 
-@override
+  @override
   void initState() {
     buttonStateText = character;
     print(character);
@@ -349,3 +349,4 @@ class _KeybindButtonState extends ConsumerState<KeybindButton> {
     );
   }
 }
+
