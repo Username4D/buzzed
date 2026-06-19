@@ -32,18 +32,20 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
         child: KeyboardListener(
           focusNode: _focusNode,
           onKeyEvent: (value) {
-            if (!ref.read(MatchStateProvider)['hasBuzzered']) {
+            if (!ref.read(MatchStateProvider)['hasBuzzered'] & ref.read(MatchStateProvider)['canBuzzer']) {
               if (value.character == 'r') {
                 setState(() {
                   focusedSide = 'red';
                 });
+                ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
               }
               if (value.character == 'b') {
                 setState(() {
                   focusedSide = 'blue';
                 });
+                ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
               }
-              ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
+              
             }
           },
           child: LayoutBuilder(
@@ -252,6 +254,8 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
 }
 
 class QuestionPageHost extends ConsumerWidget {
+  const QuestionPageHost({super.key});
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

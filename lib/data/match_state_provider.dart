@@ -17,6 +17,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     defaultState['hasConfirmedGuess'] = false;
     defaultState['oldQuestionPage'] = null;
     defaultState['timer'] = TimerPopup(round: 1,);
+    defaultState['canBuzzer'] = false;
     return defaultState;
   }
 
@@ -26,7 +27,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
 
   void startRound() {
     state = {...state, 'oldQuestionPage' : state['currentQuestionPage'],};
-    state = {...state, 'currentQuestionPage' : QuestionPage(), 'round': state['round'] + 1, 'hasBuzzered': false, 'hasConfirmedGuess': false, 'timer': TimerPopup(key: UniqueKey(), round: state['round'] + 1,)};
+    state = {...state, 'currentQuestionPage' : QuestionPage(), 'round': state['round'] + 1, 'hasBuzzered': false, 'hasConfirmedGuess': false, 'timer': TimerPopup(key: UniqueKey(), round: state['round'] + 1,), 'canBuzzer': false};
     print('nextRound');
   }
 
@@ -43,16 +44,16 @@ final MatchStateProvider = NotifierProvider<MatchState, Map<String, dynamic>>(()
   return MatchState();
 });
 
-class TimerPopup extends StatefulWidget {
+class TimerPopup extends ConsumerStatefulWidget {
   const TimerPopup({super.key, required this.round});
   final int round;
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<ConsumerStatefulWidget> createState() {
     return TimerPopupState();
   }
 }
 
-class TimerPopupState extends State<TimerPopup> {
+class TimerPopupState extends ConsumerState<TimerPopup> {
   int count = 3;
   late Timer _timer;
 
@@ -67,6 +68,8 @@ class TimerPopupState extends State<TimerPopup> {
         if (count > 0) {
           startTimer();
           print('timer');
+        } else {
+          ref.read(MatchStateProvider.notifier).changeState(parameterName: 'canBuzzer', newValue: true);
         }
       }
     );
@@ -98,7 +101,7 @@ class TimerPopupState extends State<TimerPopup> {
               style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Color.fromARGB(count > 0 ? 255 : 0, 255, 255, 255)),
             ),
             Text(
-              'Round: ${widget.round.toString()}  ',
+              'Round ${widget.round.toString()}',
               style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Color.fromARGB(count > 0 ? 255 : 0, 255, 255, 255)),
             ),
           ],
