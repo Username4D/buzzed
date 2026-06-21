@@ -17,6 +17,18 @@ class GenreNotifier extends Notifier<List<Genre>> {
     newList.remove(genre);
     state = newList;
   }
+
+  void changeGenreName(Genre genre, String name) {
+    String link = genre.spotifyLink;
+    state.remove(genre);
+    state = [...state, Genre(name, link)];
+  }
+
+  void changeGenreLink(Genre genre, String link) {
+    String name = genre.name;
+    state.remove(genre);
+    state = [...state, Genre(name, link)];
+  }
 }
 
 final genreNotifierProvider = NotifierProvider<GenreNotifier, List<Genre>>((){

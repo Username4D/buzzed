@@ -13,6 +13,11 @@ class GenreSelectionPage extends ConsumerStatefulWidget {
 
 class _GenreSelectionPageState extends ConsumerState<GenreSelectionPage> {
   @override
+  void initState() {
+    print(ref.read(genreNotifierProvider));
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

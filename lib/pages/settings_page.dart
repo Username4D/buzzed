@@ -107,12 +107,8 @@ class SectionHeader extends StatelessWidget {
 }
 
 class GenreTile extends ConsumerWidget {
-  Genre genre = Genre('', '');
-  GenreTile({super.key, Genre? genre}) {
-    if (genre is Genre) {
-      this.genre = genre;
-    }
-  }
+  Genre genre;
+  GenreTile({super.key, required this.genre});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -132,6 +128,9 @@ class GenreTile extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          onChanged: (value) {
+                            ref.read(genreNotifierProvider.notifier).changeGenreName(genre, value);
+                          },
                           decoration: InputDecoration(
                             hintText: 'Genre Name'
                           ),
@@ -142,6 +141,9 @@ class GenreTile extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          onChanged: (String value) {
+                            ref.read(genreNotifierProvider.notifier).changeGenreLink(genre, value);
+                          },
                           decoration: InputDecoration(
                             hintText: 'Spotify PLaylist URL'
                           ),
