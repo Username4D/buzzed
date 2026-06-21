@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/genre_provider.dart';
 import 'package:music_quiz/data/match_settings_provider.dart';
+import 'package:music_quiz/main.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({
@@ -13,58 +14,74 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(60.0),
-        child: Center(
-          child: ListView( 
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(40.0),
-                  child: Text(
-                    'Settings',
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
-              ),
-              CustomSeperator(),
-              SectionHeader(sectionTitle: 'Genres:',),
-              // CustomSeperator(),
-              Padding(
-                padding: const EdgeInsetsGeometry.only(left: 20, right: 20),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 200, minHeight: 0,),
-                
-                  child: SingleChildScrollView(
-                    primary: true,
-                    scrollDirection: Axis.vertical,
-                    physics: BouncingScrollPhysics(),
-                    child: Column(
-                      children: ref.watch(genreNotifierProvider).map(((e) => GenreTile(genre: e,))).toList(),
+      body: Stack(
+        children: [Padding(
+          padding: const EdgeInsets.all(60.0),
+          child: Center(
+            child: ListView( 
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40.0),
+                    child: Text(
+                      'Settings',
+                      style: Theme.of(context).textTheme.displayLarge,
                     ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 50,
-                child: TextButton(
-                  onPressed: () {
-                    ref.read(genreNotifierProvider.notifier).addGenre('', '');
-                    print('NewGenre');
-                  },
-                  child: Text('Add Genre'),
+                CustomSeperator(),
+                SectionHeader(sectionTitle: 'Genres:',),
+                // CustomSeperator(),
+                Padding(
+                  padding: const EdgeInsetsGeometry.only(left: 20, right: 20),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 200, minHeight: 0,),
+                  
+                    child: SingleChildScrollView(
+                      primary: true,
+                      scrollDirection: Axis.vertical,
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        children: ref.watch(genreNotifierProvider).map(((e) => GenreTile(genre: e,))).toList(),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              CustomSeperator(),
-              SectionHeader(sectionTitle: 'Match Settings:',),
-              SliderSetting(settingName: 'roundsAmount', displaySettingName: 'Amount of Rounds: ',),
-              KeybindSetting(settingName: 'blueKeybind', displaySettingName: 'Blue buzzer keybind:',),
-              KeybindSetting(settingName: 'redKeybind', displaySettingName: 'Red buzzer keybind:',),
-            ],
+                SizedBox(
+                  height: 50,
+                  child: TextButton(
+                    onPressed: () {
+                      ref.read(genreNotifierProvider.notifier).addGenre('', '');
+                      print('NewGenre');
+                    },
+                    child: Text('Add Genre'),
+                  ),
+                ),
+                CustomSeperator(),
+                SectionHeader(sectionTitle: 'Match Settings:',),
+                SliderSetting(settingName: 'roundsAmount', displaySettingName: 'Amount of Rounds: ',),
+                KeybindSetting(settingName: 'blueKeybind', displaySettingName: 'Blue buzzer keybind:',),
+                KeybindSetting(settingName: 'redKeybind', displaySettingName: 'Red buzzer keybind:',),
+              ],
+            ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                ref.read(appStateProvider.notifier).changePage('mainMenu');
+              },
+            ),
+          ),
+        )
+        ]
       ),
     );
   } 

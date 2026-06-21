@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/match_settings_provider.dart';
 import 'package:music_quiz/data/match_state_provider.dart';
+import 'package:music_quiz/main.dart';
 
 class QuestionPage extends ConsumerStatefulWidget {
   const QuestionPage({super.key});
@@ -322,6 +323,13 @@ class WinScreenState extends ConsumerState {
                     Text(
                       '${state['scoreRed']} : ${state['scoreBlue']}',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Colors.white,)
+                    ),
+                    TextButton(
+                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white), foregroundColor: WidgetStatePropertyAll(winnerSide == 'Red' ? Colors.redAccent : Colors.blueAccent), overlayColor: WidgetStatePropertyAll(const Color.fromARGB(19, 112, 112, 112))),
+                      child: Text('Return to Menu'),
+                      onPressed: () {
+                        ref.read(appStateProvider.notifier).changePage('mainMenu');
+                      },
                     )
                   ],
                 ),

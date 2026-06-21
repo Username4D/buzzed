@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:music_quiz/main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +14,7 @@ class HomeScreenState extends State<HomeScreen> {
     @override
     Widget build(BuildContext context) {
         return Scaffold(
+          backgroundColor: Colors.white,
                 body: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Center(
@@ -27,13 +31,13 @@ class HomeScreenState extends State<HomeScreen> {
 
 }
 
-class MenuColumn extends StatelessWidget {
+class MenuColumn extends ConsumerWidget {
   const MenuColumn({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -46,7 +50,7 @@ class MenuColumn extends StatelessWidget {
           flex: 1,
           child: TextButton(
             onPressed: () => {
-              print("Start")
+              ref.read(appStateProvider.notifier).changePage('genreSelection')
             },
             child: Text("Start"),
           ),
@@ -55,7 +59,7 @@ class MenuColumn extends StatelessWidget {
           flex: 1,
           child: TextButton(
             onPressed: () => {
-              print("Settings")
+              ref.read(appStateProvider.notifier).changePage('settingsPage')
             },
             child: Text("Settings"),
           ),
@@ -72,20 +76,6 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 3,
-      child: SizedBox(
-        height: 200,
-        child: ColoredBox(
-          color: Colors.blueGrey,
-          child: Center(
-            child: Text(
-              "Buzzer",
-              textScaler: TextScaler.linear(2),
-          ),
-        ),
-        ),
-      ),
-    );
+    return SvgPicture.asset('assets/logo.svg');
   }
 }

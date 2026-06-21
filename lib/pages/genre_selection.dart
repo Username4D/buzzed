@@ -1,29 +1,47 @@
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/genre_provider.dart';
+import 'package:music_quiz/main.dart';
 
 
-
-class GenreSelectionPage extends StatefulWidget {
+class GenreSelectionPage extends ConsumerStatefulWidget {
   const GenreSelectionPage({super.key});
 
   @override
-  State<GenreSelectionPage> createState() => _GenreSelectionPageState();
+  ConsumerState<GenreSelectionPage> createState() => _GenreSelectionPageState();
 }
 
-class _GenreSelectionPageState extends State<GenreSelectionPage> {
+class _GenreSelectionPageState extends ConsumerState<GenreSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 60, right: 60),
-            child: GenreOptions(),
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 60, right: 60),
+                child: GenreOptions(),
+              ),
+            ),
           ),
-        ),
+          Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 60,
+            height: 60,
+            child: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                ref.read(appStateProvider.notifier).changePage('mainMenu');
+              },
+            ),
+          ),
+        )
+        ],
       ),
     );
   }
