@@ -40,29 +40,39 @@ class MenuColumn extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Logo(),
-        Spacer(
-          flex: 1
+        SizedBox(
+          height: 30,
         ),
-        Expanded(
-          flex: 1,
-          child: TextButton(
-            onPressed: () => {
-              ref.read(appStateProvider.notifier).changePage('genreSelection')
-            },
-            child: Text("Start"),
+        TextButton(
+          onPressed: () => {
+            ref.read(appStateProvider.notifier).changePage('genreSelection')
+          },
+          style: ButtonStyle(
+            textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+            backgroundColor: WidgetStatePropertyAll(Colors.black),
+            foregroundColor: WidgetStatePropertyAll(Colors.white),
+            overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 255, 255)),
           ),
+          child: Text("Start"),
         ),
-        Expanded(
-          flex: 1,
-          child: TextButton(
-            onPressed: () => {
-              ref.read(appStateProvider.notifier).changePage('settingsPage')
-            },
-            child: Text("Settings"),
+        SizedBox(
+          height: 10,
+        ),
+        TextButton(
+          onPressed: () => {
+            ref.read(appStateProvider.notifier).changePage('settingsPage')
+          },
+          style: ButtonStyle(
+            textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+            backgroundColor: WidgetStatePropertyAll(Colors.black),
+            foregroundColor: WidgetStatePropertyAll(Colors.white),
+            overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 255, 255)),
           ),
+          child: Text("Settings"),
         )
       ]
     );
