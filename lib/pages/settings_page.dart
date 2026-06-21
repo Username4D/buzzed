@@ -18,9 +18,9 @@ class SettingsPage extends ConsumerWidget {
         children: [Padding(
           padding: const EdgeInsets.all(60.0),
           child: Center(
-            child: ListView( 
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
+            child: Column( 
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Center(
                   child: Padding(
@@ -50,13 +50,22 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 50,
-                  child: TextButton(
-                    onPressed: () {
-                      ref.read(genreNotifierProvider.notifier).addGenre('', '');
-                      print('NewGenre');
-                    },
-                    child: Text('Add Genre'),
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50.0, right: 50.0),
+                    child: TextButton(
+                      style: ButtonStyle(
+                        textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+                        backgroundColor: WidgetStatePropertyAll(Colors.black),
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 0255, 0255)),
+                      ),
+                      onPressed: () {
+                        ref.read(genreNotifierProvider.notifier).addGenre('', '');
+                        print('NewGenre');
+                      },
+                      child: Text('Add Genre'),
+                    ),
                   ),
                 ),
                 CustomSeperator(),
@@ -151,13 +160,17 @@ class GenreTile extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 50,
-                      height: double.infinity,
-                      child: TextButton(
+                      child: IconButton(
+                        style: ButtonStyle(
+                          textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+                          backgroundColor: WidgetStatePropertyAll(Colors.black),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 0255, 0255)),
+                        ),
                         onPressed: () {
                           ref.read(genreNotifierProvider.notifier).removeGenre(genre);
                         },
-                        child: Text('X'),
+                        icon: Icon(Icons.close),
                       ),
                     )
                   ],
@@ -226,6 +239,9 @@ class _SliderSettingState extends ConsumerState<SliderSetting> {
           Flexible(
             child: Center(
               child: Slider(
+                activeColor: Colors.black,
+                inactiveColor: Colors.grey,
+                thumbColor: const Color.fromARGB(255, 0, 0, 0),
                 value: settingValue.toDouble(),
                 min: 1,
                 max: 15,
@@ -353,7 +369,13 @@ class _KeybindButtonState extends ConsumerState<KeybindButton> {
           }
         }
       },
-      child: ElevatedButton(
+      child: TextButton(
+        style: ButtonStyle(
+          textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+          backgroundColor: WidgetStatePropertyAll(Colors.black),
+          foregroundColor: WidgetStatePropertyAll(Colors.white),
+          overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 0255, 0255)),
+        ),
         onPressed: () {
           setState(() {
             isAwaitingInput = true;
