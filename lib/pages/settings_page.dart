@@ -83,7 +83,7 @@ class SettingsPage extends ConsumerWidget {
             width: 60,
             height: 60,
             child: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, color: Colors.black,),
               onPressed: () {
                 ref.read(appStateProvider.notifier).changePage('mainMenu');
               },
@@ -137,11 +137,18 @@ class GenreTile extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          cursorColor: Colors.black,
                           onChanged: (value) {
                             ref.read(genreNotifierProvider.notifier).changeGenreName(genre, value);
                           },
                           decoration: InputDecoration(
-                            hintText: 'Genre Name'
+                            hintText: 'Genre Name',
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 2
+                              )
+                            )
                           ),
                         ),
                       ),
@@ -153,8 +160,15 @@ class GenreTile extends ConsumerWidget {
                           onChanged: (String value) {
                             ref.read(genreNotifierProvider.notifier).changeGenreLink(genre, value);
                           },
+                          cursorColor: Colors.black,
                           decoration: InputDecoration(
-                            hintText: 'Spotify PLaylist URL'
+                            hintText: 'Spotify PLaylist URL',
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.black,
+                                width: 2
+                              )
+                            )
                           ),
                         ),
                       ),
