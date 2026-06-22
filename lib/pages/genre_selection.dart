@@ -98,11 +98,11 @@ class GenreOptions extends ConsumerWidget {
 }
 
 class GenreButton extends StatelessWidget {
-  GenreButton({
+  const GenreButton({
     super.key, 
-    this.genreName = 'Rock'});
+    required this.genreName});
 
-  String genreName = 'Rock';
+  final String genreName;
   @override
   Widget build(BuildContext context) {
     return SizedBox(

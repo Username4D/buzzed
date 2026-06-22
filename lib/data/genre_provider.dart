@@ -7,8 +7,8 @@ class GenreNotifier extends Notifier<List<Genre>> {
     return(defaultState);
   }
 
-  void addGenre(String name, String spotifyLink) {
-    final List<Genre> newGenre = [Genre(name, spotifyLink)]; 
+  void addGenre(String name, String folderPath) {
+    final List<Genre> newGenre = [Genre(name, folderPath)]; 
     state = state + newGenre;
   }
 
@@ -19,15 +19,15 @@ class GenreNotifier extends Notifier<List<Genre>> {
   }
 
   void changeGenreName(Genre genre, String name) {
-    String link = genre.spotifyLink;
+    String path = genre.folderPath;
     state.remove(genre);
-    state = [...state, Genre(name, link)];
+    state = [...state, Genre(name, path)];
   }
 
-  void changeGenreLink(Genre genre, String link) {
+  void changeGenrePath(Genre genre, String path) {
     String name = genre.name;
     state.remove(genre);
-    state = [...state, Genre(name, link)];
+    state = [...state, Genre(name, path)];
   }
 }
 
@@ -37,14 +37,14 @@ final genreNotifierProvider = NotifierProvider<GenreNotifier, List<Genre>>((){
 
 class Genre {
   String name = 'Pop';
-  String spotifyLink = '';
+  String folderPath = '';
 
-  Genre(this.name, this.spotifyLink);
+  Genre(this.name, this.folderPath);
 
   void changeName({String name = 'Pop'}) {
     this.name = name;
   }
-  void changeLink({String spotifyLink = ''}) {
-    this.spotifyLink = spotifyLink;
+  void changePath({String folderPath = ''}) {
+    this.folderPath = folderPath;
   }
 }

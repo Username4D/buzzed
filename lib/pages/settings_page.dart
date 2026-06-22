@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -156,22 +159,28 @@ class GenreTile extends ConsumerWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          onChanged: (String value) {
-                            ref.read(genreNotifierProvider.notifier).changeGenreLink(genre, value);
-                          },
-                          cursorColor: Colors.black,
-                          decoration: InputDecoration(
-                            hintText: 'Spotify PLaylist URL',
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 2
-                              )
-                            )
-                          ),
+                        child: Text(
+                          genre.folderPath,
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      child: IconButton(
+                        style: ButtonStyle(
+                          textStyle: WidgetStatePropertyAll(Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
+                          backgroundColor: WidgetStatePropertyAll(Colors.black),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                          overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 0255, 0255)),
+                        ),
+                        onPressed: () async {
+                          Future<String?> result = FilesystemPicker.open(context: context, rootDirectory: Directory('C:/'), fsType: FilesystemType.folder);
+                          ref.read(genreNotifierProvider.notifier).changeGenrePath(genre, await result ?? '');
+                        },
+                        icon: Icon(Icons.folder),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
                     ),
                     SizedBox(
                       child: IconButton(
