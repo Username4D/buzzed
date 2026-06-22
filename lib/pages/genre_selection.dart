@@ -39,7 +39,7 @@ class _GenreSelectionPageState extends ConsumerState<GenreSelectionPage> {
             width: 60,
             height: 60,
             child: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.arrow_back, color: Colors.black,),
               onPressed: () {
                 ref.read(appStateProvider.notifier).changePage('mainMenu');
               },
@@ -79,11 +79,15 @@ class GenreOptions extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
               height: 150,
-              child: ListView(
+              child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 primary: true,
-                children: genres.map((e) => GenreButton(genreName: e.name,)).toList(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: genres.map((e) => GenreButton(genreName: e.name,)).toList(),
+                ),
               ),
             ),
           ),
@@ -107,7 +111,7 @@ class GenreButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FilledButton(
-          style: Theme.of(context).filledButtonTheme.style,
+          style: FilledButton.styleFrom(backgroundColor: Colors.black),
           onPressed: () {
             print("Wow");
           },
