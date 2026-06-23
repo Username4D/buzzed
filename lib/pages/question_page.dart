@@ -39,12 +39,14 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
                   focusedSide = 'red';
                 });
                 ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
+                ref.read(MatchStateProvider)['audioPlayer'].stop();
               }
               if (value.character == 'b') {
                 setState(() {
                   focusedSide = 'blue';
                 });
                 ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
+                ref.read(MatchStateProvider)['audioPlayer'].stop();
               }
               
             }
@@ -263,7 +265,7 @@ class QuestionPageHost extends ConsumerWidget {
     return Stack(
       children: [
         ref.watch(MatchStateProvider)['currentQuestionPage'],
-        (ref.watch(MatchStateProvider)['round'] == ref.watch(MatchSettingsNotifierProvider)['roundsAmount'] + 1 ? WinScreen() : ref.watch(MatchStateProvider)['timer'])
+        (ref.watch(MatchStateProvider)['round'] == ref.watch(MatchSettingsNotifierProvider)['roundsAmount'] + 1 ? WinScreen() : ref.watch(MatchStateProvider)['timer']),
       ],
     );
   }

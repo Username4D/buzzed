@@ -1,24 +1,51 @@
+import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path/path.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/pages/question_page.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:math';
 
 class MatchState extends Notifier<Map<String, dynamic>> {
+  late Random rng;
+
   @override
   Map<String, dynamic> build() {
     Map<String, dynamic> defaultState = <String, dynamic>{};
-    defaultState['round'] = 1;
+    rng = Random();
+    defaultState['round'] = 0;
     defaultState['scoreRed'] = 0;
     defaultState['scoreBlue'] = 0;
     defaultState['currentQuestionPage'] = QuestionPage();
-    defaultState['youtubeUrl'] = '';
-    defaultState['playlistUrl'] = '';
+    defaultState['currentSong'];
+    defaultState['genrePath'] = '';
     defaultState['hasBuzzered'] = false;
     defaultState['hasConfirmedGuess'] = false;
     defaultState['oldQuestionPage'] = null;
-    defaultState['timer'] = TimerPopup(round: 1,);
+    defaultState['timer'] = null;
     defaultState['canBuzzer'] = false;
+    defaultState['possibleSongs'] = [];
+    defaultState['audioPlayer'] = AudioPlayer(playerId: UniqueKey().toString());
     return defaultState;
+
+  }
+
+  void defaultState() {
+    Map<String, dynamic> defaultState = <String, dynamic>{};
+    defaultState['round'] = 0;
+    defaultState['scoreRed'] = 0;
+    defaultState['scoreBlue'] = 0;
+    defaultState['currentQuestionPage'] = QuestionPage();
+    defaultState['currentSong'];
+    defaultState['genrePath'] = '';
+    defaultState['hasBuzzered'] = false;
+    defaultState['hasConfirmedGuess'] = false;
+    defaultState['oldQuestionPage'] = null;
+    defaultState['timer'] = null;
+    defaultState['canBuzzer'] = false;
+    defaultState['possibleSongs'] = [];
+    state = defaultState;
   }
 
   void setPlaylistUrl({String playlistUrl = ''}) {
@@ -37,6 +64,27 @@ class MatchState extends Notifier<Map<String, dynamic>> {
 
   void muteStateInt({required String parameterName, required int mute}) {
     state = {...state, parameterName: mute + state[parameterName]};
+  }
+
+  void scanPossibleSongs() {
+    Directory genreDir = Directory(state['genrePath']);
+    List possibleFiles = genreDir.listSync();
+    possibleFiles = possibleFiles.whereType<File>().toList();
+    List audioFiles = [];
+    for (File possibleFile in possibleFiles) {
+      if (context.extension(possibleFile.path) == '.wav') {
+        audioFiles.add(possibleFile);
+      }
+    }
+    print(audioFiles);
+    changeState(parameterName: 'possibleSongs', newValue: audioFiles);
+  }
+
+  void getNewAudio() {
+    AudioPlayer player = AudioPlayer(playerId: UniqueKey().toString());
+    File selectedSong = state['possibleSongs'][rng.nextInt(state['possibleSongs'].length)];
+    player.play(DeviceFileSource(selectedSong.path), position: Duration(seconds: 30));
+    state = {...state, 'audioPlayer': player};
   }
 }
 
@@ -70,6 +118,7 @@ class TimerPopupState extends ConsumerState<TimerPopup> {
           print('timer');
         } else {
           ref.read(MatchStateProvider.notifier).changeState(parameterName: 'canBuzzer', newValue: true);
+          ref.read(MatchStateProvider.notifier).getNewAudio();
         }
       }
     );

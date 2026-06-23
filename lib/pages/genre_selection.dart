@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/genre_provider.dart';
+import 'package:music_quiz/data/match_state_provider.dart';
 import 'package:music_quiz/main.dart';
 
 
@@ -60,7 +61,6 @@ class GenreOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final genres = ref.watch(genreNotifierProvider);
-    print(genres);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -86,7 +86,7 @@ class GenreOptions extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: genres.map((e) => GenreButton(genreName: e.name,)).toList(),
+                  children: genres.map((e) => GenreButton(genreName: e.name, genre: e,)).toList(),
                 ),
               ),
             ),
@@ -97,14 +97,16 @@ class GenreOptions extends ConsumerWidget {
   }
 }
 
-class GenreButton extends StatelessWidget {
+class GenreButton extends ConsumerWidget {
   const GenreButton({
     super.key, 
-    required this.genreName});
+    required this.genreName,
+    required this.genre});
 
+  final Genre genre;
   final String genreName;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       width: 150,
       height: 150,
@@ -113,7 +115,11 @@ class GenreButton extends StatelessWidget {
         child: FilledButton(
           style: FilledButton.styleFrom(backgroundColor: Colors.black),
           onPressed: () {
-            print("Wow");
+            ref.read(MatchStateProvider.notifier).defaultState();
+            ref.read(MatchStateProvider.notifier).changeState(parameterName: 'genrePath', newValue: genre.folderPath);
+            ref.read(MatchStateProvider.notifier).scanPossibleSongs();
+            ref.read(MatchStateProvider.notifier).startRound();
+            ref.read(appStateProvider.notifier).changePage('questionPage');
           },
           child: Text(
             genreName
