@@ -84,7 +84,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     AudioPlayer player = AudioPlayer(playerId: UniqueKey().toString());
     File selectedSong = state['possibleSongs'][rng.nextInt(state['possibleSongs'].length)];
     player.play(DeviceFileSource(selectedSong.path), position: Duration(seconds: 30));
-    state = {...state, 'audioPlayer': player};
+    state = {...state, 'audioPlayer': player, 'currentSong': selectedSong};
   }
 }
 

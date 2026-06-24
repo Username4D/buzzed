@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/match_settings_provider.dart';
 import 'package:music_quiz/data/match_state_provider.dart';
 import 'package:music_quiz/main.dart';
+import 'package:path/path.dart';
 
 class QuestionPage extends ConsumerStatefulWidget {
   const QuestionPage({super.key});
@@ -87,7 +88,8 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
                             TextButton(
                               style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 255, 255, 255)), foregroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 112, 112, 112)), overlayColor: WidgetStatePropertyAll(const Color.fromARGB(10, 112, 112, 112))),
                               onPressed: () {
-                                print('skip');
+                                ref.read(MatchStateProvider)['audioPlayer'].stop();
+                                ref.read(MatchStateProvider.notifier).startRound();
                               },
                               child: Text(
                                 'Skip'
@@ -159,7 +161,7 @@ class SidePageState extends ConsumerState<SidePage> {
               children: widget.isFocused == 'this' ? 
               [
                 Text(
-                  widget.side == 'blue' ? 'Team blue' : 'Team Red',
+                  widget.side == 'blue' ? 'Team blue' : 'Team red',
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 20,),
@@ -211,7 +213,7 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
         )
         :
         Text(
-          'Solution',
+          basenameWithoutExtension(ref.watch(MatchStateProvider)['currentSong'].path),
           style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
         ),
         SizedBox(height: 30,),
@@ -289,7 +291,7 @@ class WinScreenState extends ConsumerState {
   late Map<String, dynamic> state;
   @override
   void initState() {
-    winnerSide = ref.read(MatchStateProvider)['scoreRed'] > ref.read(MatchStateProvider)['scoreBlue'] ? 'Red' : 'Blue';
+    winnerSide = ref.read(MatchStateProvider)['scoreRed'] > ref.read(MatchStateProvider)['scoreBlue'] ? 'Red' : ref.read(MatchStateProvider)['scoreRed'] < ref.read(MatchStateProvider)['scoreBlue'] ? 'Blue' : 'Tied';
     state = ref.read(MatchStateProvider);
     _timer = Timer(
       Durations.extralong4,
@@ -308,12 +310,14 @@ class WinScreenState extends ConsumerState {
         return Align(
           alignment: AlignmentGeometry.bottomCenter,
           child: AnimatedContainer(
+            clipBehavior: Clip.hardEdge,
             duration: Durations.extralong4,
             curve: Curves.easeIn,
             width: constraints.maxWidth,
+            decoration: BoxDecoration(),
             height: delayFinished ? constraints.maxHeight : 0,
             child: ColoredBox(
-              color: winnerSide == 'Red' ? Colors.redAccent : Colors.blueAccent,
+              color: winnerSide == 'Red' ? Colors.redAccent : winnerSide == 'Blue' ? Colors.blueAccent: Colors.grey,
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -326,8 +330,9 @@ class WinScreenState extends ConsumerState {
                       '${state['scoreRed']} : ${state['scoreBlue']}',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Colors.white,)
                     ),
+                    SizedBox(height: 20,),
                     TextButton(
-                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white), foregroundColor: WidgetStatePropertyAll(winnerSide == 'Red' ? Colors.redAccent : Colors.blueAccent), overlayColor: WidgetStatePropertyAll(const Color.fromARGB(19, 112, 112, 112))),
+                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white), foregroundColor: WidgetStatePropertyAll(winnerSide == 'Red' ? Colors.redAccent : winnerSide == 'Blue' ? Colors.blueAccent: Colors.grey), overlayColor: WidgetStatePropertyAll(const Color.fromARGB(19, 112, 112, 112))),
                       child: Text('Return to Menu'),
                       onPressed: () {
                         ref.read(appStateProvider.notifier).changePage('mainMenu');
