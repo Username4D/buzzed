@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:music_quiz/ui_elements/error_widget.dart';
 import 'package:path/path.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/pages/question_page.dart';
@@ -27,6 +28,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     defaultState['canBuzzer'] = false;
     defaultState['possibleSongs'] = [];
     defaultState['audioPlayer'] = AudioPlayer(playerId: UniqueKey().toString());
+    defaultState['errorWidget'] = null;
     return defaultState;
 
   }
@@ -45,6 +47,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     defaultState['timer'] = null;
     defaultState['canBuzzer'] = false;
     defaultState['possibleSongs'] = [];
+    defaultState['errorWidget'] = null;
     state = defaultState;
   }
 
@@ -85,6 +88,16 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     File selectedSong = state['possibleSongs'][rng.nextInt(state['possibleSongs'].length)];
     player.play(DeviceFileSource(selectedSong.path), position: Duration(seconds: 30));
     state = {...state, 'audioPlayer': player, 'currentSong': selectedSong};
+  }
+
+  void showError(CustomError error, Function onProceed) {
+    state = {...state, 'errorWidget': CustomErrorWidget(
+      error: error,
+      onProceed: () {
+        state = {...state, 'errorWidget': null};
+        onProceed();
+      },
+    )};
   }
 }
 

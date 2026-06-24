@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/match_settings_provider.dart';
 import 'package:music_quiz/data/match_state_provider.dart';
 import 'package:music_quiz/main.dart';
+import 'package:music_quiz/ui_elements/error_widget.dart';
 import 'package:path/path.dart';
 
 class QuestionPage extends ConsumerStatefulWidget {
@@ -268,6 +269,7 @@ class QuestionPageHost extends ConsumerWidget {
       children: [
         ref.watch(MatchStateProvider)['currentQuestionPage'],
         (ref.watch(MatchStateProvider)['round'] == ref.watch(MatchSettingsNotifierProvider)['roundsAmount'] + 1 ? WinScreen() : ref.watch(MatchStateProvider)['timer']),
+        if (ref.watch(MatchStateProvider)['errorWidget'] != null) ref.watch(MatchStateProvider)['errorWidget']!
       ],
     );
   }
