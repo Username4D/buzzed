@@ -117,12 +117,28 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-class GenreTile extends ConsumerWidget {
+class GenreTile extends ConsumerStatefulWidget {
   Genre genre;
   GenreTile({super.key, required this.genre});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return GenreTileState();
+  }
+}
+
+
+class GenreTileState extends ConsumerState<GenreTile> {
+  TextEditingController controller = TextEditingController();
+
+
+  @override
+  void initState() {
+    super.initState();
+    controller.text = widget.genre.name;
+  }
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(20.0),
       child: Container(
@@ -139,9 +155,10 @@ class GenreTile extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          controller: controller,
                           cursorColor: Colors.black,
                           onChanged: (value) {
-                            ref.read(genreNotifierProvider.notifier).changeGenreName(genre, value);
+                            ref.read(genreNotifierProvider.notifier).changeGenreName(widget.genre, value);
                           },
                           decoration: InputDecoration(
                             hintText: 'Genre Name',
@@ -159,7 +176,7 @@ class GenreTile extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          genre.folderPath,
+                          widget.genre.folderPath,
                         ),
                       ),
                     ),
@@ -173,7 +190,7 @@ class GenreTile extends ConsumerWidget {
                         ),
                         onPressed: () async {
                           Future<String?> result = FilesystemPicker.open(context: context, rootDirectory: Directory('C:/'), fsType: FilesystemType.folder);
-                          ref.read(genreNotifierProvider.notifier).changeGenrePath(genre, await result ?? '');
+                          ref.read(genreNotifierProvider.notifier).changeGenrePath(widget.genre, await result ?? '');
                         },
                         icon: Icon(Icons.folder),
                       ),
@@ -190,7 +207,7 @@ class GenreTile extends ConsumerWidget {
                           overlayColor: WidgetStatePropertyAll(const Color.fromARGB(16, 255, 0255, 0255)),
                         ),
                         onPressed: () {
-                          ref.read(genreNotifierProvider.notifier).removeGenre(genre);
+                          ref.read(genreNotifierProvider.notifier).removeGenre(widget.genre);
                         },
                         icon: Icon(Icons.close),
                       ),
@@ -238,8 +255,14 @@ class _SliderSettingState extends ConsumerState<SliderSetting> {
   String settingName = '';
   String displaySettingName = '';
   int settingValue = 1;
-
+  
   _SliderSettingState({this.settingName = '', this.displaySettingName = ''});
+
+  @override
+  void initState() {
+    super.initState();
+    settingValue = ref.read(MatchSettingsNotifierProvider)[widget.settingName].toInt();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +290,7 @@ class _SliderSettingState extends ConsumerState<SliderSetting> {
                 value: settingValue.toDouble(),
                 min: 1,
                 max: 15,
-                divisions: 8,
+                divisions: 7,
                 onChanged: (double value) {
                   setState(() {
                     settingValue = value.toInt();
@@ -300,16 +323,10 @@ class KeybindSetting extends ConsumerStatefulWidget{
   });
 
   @override
-  ConsumerState<KeybindSetting> createState() => _KeybindSettingState(settingName: settingName, displaySettingName: displaySettingName);
+  ConsumerState<KeybindSetting> createState() => _KeybindSettingState();
 }
 
 class _KeybindSettingState extends ConsumerState<KeybindSetting> {
-  String settingName = '';
-  String displaySettingName = '';
-  int settingValue = 1;
-
-  _KeybindSettingState({this.settingName = '', this.displaySettingName = ''});
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -329,7 +346,7 @@ class _KeybindSettingState extends ConsumerState<KeybindSetting> {
           ),
           Expanded(
             flex: 1,
-            child: KeybindButton(initialCharacter: ref.watch(MatchSettingsNotifierProvider)[settingName],),
+            child: KeybindButton(settingName: widget.settingName,),
           )
         ]
       ),
@@ -339,32 +356,26 @@ class _KeybindSettingState extends ConsumerState<KeybindSetting> {
 
 class KeybindButton extends ConsumerStatefulWidget {
   String settingName = '';
-  String initialCharacter = '';
 
   KeybindButton({
-    super.key, this.settingName = '', this.initialCharacter = ''
+    super.key, this.settingName = '',
   });
 
   @override
-  ConsumerState<KeybindButton> createState() => _KeybindButtonState(settingName: settingName, character: initialCharacter);
+  ConsumerState<KeybindButton> createState() => _KeybindButtonState();
 }
 
 class _KeybindButtonState extends ConsumerState<KeybindButton> {
   bool isAwaitingInput = false;
   final FocusNode _focusNode = FocusNode();
-  String character = '';
   String buttonStateText = '';
-  String settingName = '';
-
-  _KeybindButtonState({
-    this.settingName = '', this.character = ''
-  });
+  String character = 'r';
 
   @override
   void initState() {
-    buttonStateText = character;
-    print(character);
     super.initState();
+    character = ref.read(MatchSettingsNotifierProvider)[widget.settingName];
+    buttonStateText = character;
   }
 
   @override
@@ -382,7 +393,7 @@ class _KeybindButtonState extends ConsumerState<KeybindButton> {
                   character = value.character.toString();
                   buttonStateText = character;
                 });
-                ref.read(MatchSettingsNotifierProvider.notifier).changeSetting(settingName: settingName, newValue: character);
+                ref.read(MatchSettingsNotifierProvider.notifier).changeSetting(settingName: widget.settingName, newValue: character);
               }
               else {
                 buttonStateText = character;
