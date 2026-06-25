@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:music_quiz/main.dart';
 import 'package:music_quiz/ui_elements/error_widget.dart';
 import 'package:path/path.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,10 +85,25 @@ class MatchState extends Notifier<Map<String, dynamic>> {
   }
 
   void getNewAudio() {
+    if (state['possibleSongs'].length <= 0) {
+      showError(
+        CustomError(
+          errorName: 'Too few playable audiofiles', 
+          errorDescription: 'This could be due to files getting moved or being corrupted/not able to be played, or just not enough files being in the directory.', 
+          proceedActionName: 'Go home'
+        ),
+        () {
+          ref.read(appStateProvider.notifier).changePage('mainMenu');
+          state['audioPlayer'].stop();
+        }
+      );
+    }
     AudioPlayer player = AudioPlayer(playerId: UniqueKey().toString());
     File selectedSong = state['possibleSongs'][rng.nextInt(state['possibleSongs'].length)];
     player.play(DeviceFileSource(selectedSong.path), position: Duration(seconds: 30));
-    state = {...state, 'audioPlayer': player, 'currentSong': selectedSong};
+    List subtracted = state['possibleSongs'];
+    subtracted.remove(selectedSong);
+    state = {...state, 'audioPlayer': player, 'currentSong': selectedSong, 'possibleSongs': subtracted};
   }
 
   void showError(CustomError error, Function onProceed) {
@@ -95,7 +111,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
       error: error,
       onProceed: () {
         state = {...state, 'errorWidget': null};
-        onProceed();
+        onProceed(); 
       },
     )};
   }

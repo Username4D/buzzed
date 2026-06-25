@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/match_settings_provider.dart';
 import 'package:music_quiz/data/match_state_provider.dart';
 import 'package:music_quiz/main.dart';
-import 'package:music_quiz/ui_elements/error_widget.dart';
 import 'package:path/path.dart';
 
 class QuestionPage extends ConsumerStatefulWidget {
