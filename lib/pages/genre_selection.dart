@@ -69,7 +69,7 @@ class GenreOptions extends ConsumerWidget {
             padding: const EdgeInsets.all(16.0),
             child: Center(
               child: Text(
-                'Select Genre:',
+                'Select Playlist:',
                 textScaler: TextScaler.linear(1),
                 style: Theme.of(context).textTheme.displayLarge,
                 ),

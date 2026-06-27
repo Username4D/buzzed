@@ -34,7 +34,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 CustomSeperator(),
-                SectionHeader(sectionTitle: 'Genres:',),
+                SectionHeader(sectionTitle: 'Playlists:',),
                 // CustomSeperator(),
                 Padding(
                   padding: const EdgeInsetsGeometry.only(left: 20, right: 20),
@@ -64,9 +64,8 @@ class SettingsPage extends ConsumerWidget {
                       ),
                       onPressed: () {
                         ref.read(genreNotifierProvider.notifier).addGenre('', '');
-                        print('NewGenre');
                       },
-                      child: Text('Add Genre'),
+                      child: Text('Add new playlist'),
                     ),
                   ),
                 ),
@@ -161,7 +160,7 @@ class GenreTileState extends ConsumerState<GenreTile> {
                             ref.read(genreNotifierProvider.notifier).changeGenreName(widget.genre, value);
                           },
                           decoration: InputDecoration(
-                            hintText: 'Genre Name',
+                            hintText: 'Playlist name',
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                 color: Colors.black,
