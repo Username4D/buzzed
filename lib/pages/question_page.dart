@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/match_settings_provider.dart';
@@ -18,7 +19,7 @@ class QuestionPage extends ConsumerStatefulWidget {
 class QuestionPageState extends ConsumerState<QuestionPage> {
   String focusedSide = 'none';
   final FocusNode _focusNode = FocusNode();
-  
+  AudioPlayer buzzerSfx = AudioPlayer();
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
                 });
                 ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
                 ref.read(MatchStateProvider)['audioPlayer'].stop();
+                buzzerSfx.play(AssetSource('buzzer.wav'));
               }
               if (value.character == 'b') {
                 setState(() {
@@ -48,6 +50,7 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
                 });
                 ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasBuzzered', newValue: true);
                 ref.read(MatchStateProvider)['audioPlayer'].stop();
+                buzzerSfx.play(AssetSource('buzzer.wav'));
               }
               
             }
@@ -140,11 +143,12 @@ class SidePage extends ConsumerStatefulWidget {
 }
 
 class SidePageState extends ConsumerState<SidePage> {
-  
+  AudioPlayer outcomeSfx = AudioPlayer();
+
   @override
   Widget build(BuildContext context,) {
     return AnimatedContainer(
-      duration: Durations.short2,
+      duration: ref.watch(MatchStateProvider)['hasConfirmedGuess'] ? Durations.long1 : Durations.short2,
       width: widget.constraints.maxWidth * (ref.watch(MatchStateProvider)['hasConfirmedGuess'] ? 00.2 : (widget.isFocused == 'this' ? 0.6 : 0.2)),
       height: double.infinity,
       onEnd: () {
@@ -165,7 +169,7 @@ class SidePageState extends ConsumerState<SidePage> {
                   style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 20,),
-                PostGuessScreen(side: widget.side)
+                PostGuessScreen(side: widget.side, outcomeSfx: outcomeSfx,)
               ]
               :
               [
@@ -184,8 +188,9 @@ class SidePageState extends ConsumerState<SidePage> {
 }
 
 class PostGuessScreen extends ConsumerStatefulWidget {
-  const PostGuessScreen({super.key, required this.side});
+  const PostGuessScreen({super.key, required this.side, required this.outcomeSfx});
   final String side;
+  final AudioPlayer outcomeSfx;
   @override
   ConsumerState<PostGuessScreen> createState() => _PostGuessScreenState();
 }
@@ -234,6 +239,7 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
                   ref.read(MatchStateProvider.notifier).muteStateInt(parameterName: widget.side == 'red' ? 'scoreRed' : 'scoreBlue', mute: 1);
                 }
                 ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasConfirmedGuess', newValue: true);
+                widget.outcomeSfx.play(AssetSource('buzzer_correct.wav'));
               },
               icon: Icon(Icons.check, color: Colors.white, size: 40,),
             ),
@@ -248,6 +254,7 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
                   
                 }
                 ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasConfirmedGuess', newValue: true);
+                widget.outcomeSfx.play(AssetSource('buzzer_wrong.wav'));
               },
               icon: Icon(Icons.close, color: Colors.white, size: 40,),
             ),
@@ -269,7 +276,7 @@ class QuestionPageHost extends ConsumerWidget {
         ref.watch(MatchStateProvider)['currentQuestionPage'],
         (ref.watch(MatchStateProvider)['round'] == ref.watch(MatchSettingsNotifierProvider)['roundsAmount'] + 1 ? WinScreen() : ref.watch(MatchStateProvider)['timer']),
         if (ref.watch(MatchStateProvider)['errorWidget'] != null) ref.watch(MatchStateProvider)['errorWidget']!
-      ],
+      ], 
     );
   }
 }

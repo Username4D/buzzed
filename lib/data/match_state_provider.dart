@@ -133,7 +133,7 @@ class TimerPopup extends ConsumerStatefulWidget {
 class TimerPopupState extends ConsumerState<TimerPopup> {
   int count = 3;
   late Timer _timer;
-
+  late AudioPlayer countdownSfx;
   void startTimer() {
     _timer = Timer(
       Duration(seconds: 1),
@@ -151,6 +151,7 @@ class TimerPopupState extends ConsumerState<TimerPopup> {
         }
       }
     );
+
   }
 
   @override
@@ -160,9 +161,10 @@ class TimerPopupState extends ConsumerState<TimerPopup> {
 
   @override
   void initState() {
-    print(count);
-    startTimer();
     super.initState();
+    startTimer();
+    countdownSfx = AudioPlayer();
+    countdownSfx.play(AssetSource('countdown.wav'));
   }
 
   @override
