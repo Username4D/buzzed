@@ -36,7 +36,7 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
         child: KeyboardListener(
           focusNode: _focusNode,
           onKeyEvent: (value) {
-            if (!ref.read(MatchStateProvider)['hasBuzzered'] & ref.read(MatchStateProvider)['canBuzzer']) {
+            if (!ref.read(MatchStateProvider)['hasBuzzered'] & ref.read(MatchStateProvider)['canBuzzer'] & !ref.read(MatchStateProvider)['isPaused']) {
               if (value.character == 'r') {
                 setState(() {
                   focusedSide = 'red';

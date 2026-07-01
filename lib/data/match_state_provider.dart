@@ -31,6 +31,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     defaultState['possibleSongs'] = [];
     defaultState['audioPlayer'] = AudioPlayer(playerId: UniqueKey().toString());
     defaultState['errorWidget'] = null;
+    defaultState['isPaused'] = false;
     return defaultState;
 
   }
@@ -50,6 +51,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
     defaultState['canBuzzer'] = false;
     defaultState['possibleSongs'] = [];
     defaultState['errorWidget'] = null;
+    defaultState['isPaused'] = false;
     state = defaultState;
   }
 
@@ -87,6 +89,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
 
   void getNewAudio() {
     if (state['possibleSongs'].length <= 0) {
+      state = {...state, 'isPaused': true};
       showError(
         CustomError(
           errorName: 'Too few playable audiofiles', 
