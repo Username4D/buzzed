@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomErrorWidget extends StatefulWidget {
+class CustomErrorWidget extends ConsumerStatefulWidget {
   const CustomErrorWidget({
     super.key, required this.error, required this.onProceed
   });
   final CustomError error;
   final Function onProceed;
   @override
-  State createState() {
+  ConsumerState createState() {
     return CustomErrorWidgetState();
   }
 }
 
-class CustomErrorWidgetState extends State<CustomErrorWidget> {
+class CustomErrorWidgetState extends ConsumerState<CustomErrorWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(

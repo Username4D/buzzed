@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_quiz/data/music_provider.dart';
 import 'package:music_quiz/pages/genre_selection.dart';
 import 'package:music_quiz/pages/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,6 +39,12 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(musicProvider.notifier).start();
+  }
 
   @override
   Widget build(BuildContext context) {

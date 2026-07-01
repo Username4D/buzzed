@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_quiz/data/genre_provider.dart';
 import 'package:music_quiz/data/match_state_provider.dart';
+import 'package:music_quiz/data/music_provider.dart';
 import 'package:music_quiz/main.dart';
 
 
@@ -118,6 +119,7 @@ class GenreButton extends ConsumerWidget {
             ref.read(MatchStateProvider.notifier).defaultState();
             ref.read(MatchStateProvider.notifier).changeState(parameterName: 'genrePath', newValue: genre.folderPath);
             ref.read(MatchStateProvider.notifier).scanPossibleSongs();
+            ref.read(musicProvider).down();
             ref.read(MatchStateProvider.notifier).startRound();
             ref.read(appStateProvider.notifier).changePage('questionPage');
           },

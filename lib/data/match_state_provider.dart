@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:music_quiz/data/music_provider.dart';
 import 'package:music_quiz/main.dart';
 import 'package:music_quiz/ui_elements/error_widget.dart';
 import 'package:path/path.dart';
@@ -93,6 +94,7 @@ class MatchState extends Notifier<Map<String, dynamic>> {
           proceedActionName: 'Go home'
         ),
         () {
+          ref.read(musicProvider.notifier).up();
           ref.read(appStateProvider.notifier).changePage('mainMenu');
           state['audioPlayer'].stop();
         }
