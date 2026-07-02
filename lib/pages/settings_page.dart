@@ -46,7 +46,7 @@ class SettingsPage extends ConsumerWidget {
                       scrollDirection: Axis.vertical,
                       physics: BouncingScrollPhysics(),
                       child: Column(
-                        children: ref.watch(genreNotifierProvider).map(((e) => GenreTile(genre: e,))).toList(),
+                        children: ref.watch(genreNotifierProvider).map(((e) => GenreTile(genre: e, key: UniqueKey(),))).toList(),
                       ),
                     ),
                   ),
@@ -156,8 +156,11 @@ class GenreTileState extends ConsumerState<GenreTile> {
                         child: TextField(
                           controller: controller,
                           cursorColor: Colors.black,
-                          onChanged: (value) {
-                            ref.read(genreNotifierProvider.notifier).changeGenreName(widget.genre, value);
+                          onEditingComplete: () {
+                            ref.read(genreNotifierProvider.notifier).changeGenreName(widget.genre, controller.text);
+                          },
+                          onTapOutside: (x) {
+                            ref.read(genreNotifierProvider.notifier).changeGenreName(widget.genre, controller.text);
                           },
                           decoration: InputDecoration(
                             hintText: 'Playlist name',
