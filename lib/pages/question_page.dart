@@ -92,8 +92,10 @@ class QuestionPageState extends ConsumerState<QuestionPage> {
                             TextButton(
                               style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 255, 255, 255)), foregroundColor: WidgetStatePropertyAll(const Color.fromARGB(255, 112, 112, 112)), overlayColor: WidgetStatePropertyAll(const Color.fromARGB(10, 112, 112, 112))),
                               onPressed: () {
-                                ref.read(MatchStateProvider)['audioPlayer'].stop();
-                                ref.read(MatchStateProvider.notifier).startRound();
+                                if (!ref.read(MatchStateProvider)['isPaused']){
+                                  ref.read(MatchStateProvider)['audioPlayer'].stop();
+                                  ref.read(MatchStateProvider.notifier).startRound();
+                                }
                               },
                               child: Text(
                                 'Skip'
@@ -209,9 +211,11 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
           
           style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.white), foregroundColor: WidgetStatePropertyAll(widget.side == 'red' ? Colors.red : Colors.blue), overlayColor: WidgetStatePropertyAll(const Color.fromARGB(19, 112, 112, 112))),
           onPressed: () {
-            setState(() {
-              solutionRevealed = true;
-            });
+            if (!ref.read(MatchStateProvider)['isPaused']){
+              setState(() {
+                solutionRevealed = true;
+              });
+            }
           },
           child: Text(
             'Reveal Solution?'
@@ -236,11 +240,13 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
               splashColor: Color.fromARGB(50, 255, 255, 255),
               highlightColor: Color.fromARGB(50, 255, 255, 255),
               onPressed: () {
-                if (!ref.read(MatchStateProvider)['hasConfirmedGuess']) {
-                  ref.read(MatchStateProvider.notifier).muteStateInt(parameterName: widget.side == 'red' ? 'scoreRed' : 'scoreBlue', mute: 1);
+                if (!ref.read(MatchStateProvider)['isPaused']){
+                  if (!ref.read(MatchStateProvider)['hasConfirmedGuess']) {
+                    ref.read(MatchStateProvider.notifier).muteStateInt(parameterName: widget.side == 'red' ? 'scoreRed' : 'scoreBlue', mute: 1);
+                  }
+                  ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasConfirmedGuess', newValue: true);
+                  widget.outcomeSfx.play(AssetSource('buzzer_correct.wav'));
                 }
-                ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasConfirmedGuess', newValue: true);
-                widget.outcomeSfx.play(AssetSource('buzzer_correct.wav'));
               },
               icon: Icon(Icons.check, color: Colors.white, size: 40,),
             ),
@@ -250,12 +256,14 @@ class _PostGuessScreenState extends ConsumerState<PostGuessScreen> {
               splashColor: Color.fromARGB(50, 255, 255, 255),
               highlightColor: Color.fromARGB(50, 255, 255, 255),
               onPressed: () {
-                if (!ref.read(MatchStateProvider)['hasConfirmedGuess']) {
-                  ref.read(MatchStateProvider.notifier).muteStateInt(parameterName: widget.side == 'red' ? 'scoreRed' : 'scoreBlue', mute: -1);
-                  
+                if (!ref.read(MatchStateProvider)['isPaused']){
+                  if (!ref.read(MatchStateProvider)['hasConfirmedGuess']) {
+                    ref.read(MatchStateProvider.notifier).muteStateInt(parameterName: widget.side == 'red' ? 'scoreRed' : 'scoreBlue', mute: -1);
+                    
+                  }
+                  ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasConfirmedGuess', newValue: true);
+                  widget.outcomeSfx.play(AssetSource('buzzer_wrong.wav'));
                 }
-                ref.read(MatchStateProvider.notifier).changeState(parameterName: 'hasConfirmedGuess', newValue: true);
-                widget.outcomeSfx.play(AssetSource('buzzer_wrong.wav'));
               },
               icon: Icon(Icons.close, color: Colors.white, size: 40,),
             ),

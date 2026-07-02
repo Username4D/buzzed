@@ -15,6 +15,7 @@ class GenreNotifier extends Notifier<List<Genre>> {
   void removeGenre(Genre genre) {
     var newList = List<Genre>.from(state);
     newList.remove(genre);
+    print(genre.name);
     state = newList;
   }
 
