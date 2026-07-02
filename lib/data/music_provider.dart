@@ -22,6 +22,7 @@ class FadeablePlayer {
         audioPlayer.setVolume(animation.value);
       });
     audioPlayer.setVolume(volume);
+    audioPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
   void up() {
